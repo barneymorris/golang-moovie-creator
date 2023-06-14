@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/betelgeusexru/golang-moovie-creator/movie/domain"
 	"github.com/betelgeusexru/golang-moovie-creator/movie/repository"
 	"github.com/betelgeusexru/golang-moovie-creator/movie/service"
@@ -24,5 +26,17 @@ func NewMovieController(svc *service.MovieService, repo *repository.MovieReposit
 }
 
 func (h *MovieController) GetMovieById(c *fiber.Ctx) error {
-	return c.Status(200).JSON("working fine")
+	id := c.Params("id")
+
+	if id == "" {
+		return fiber.NewError(http.StatusBadRequest, "you didnt provide any id")
+	}
+
+	movie, err := h.MovieService.FindOne(id)
+
+	if err != nil {
+		return fiber.NewError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.Status(200).JSON(movie)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 // TODO Move to config
-var DATABASE_URL string = "postgres://barney:barney@localhost:5432/barney"
+var DATABASE_URL string = "postgres://barney:barney@localhost:5432/barney?sslmode=disable"
 
 type PostgreseClient struct {
 	Connection *pgx.Conn
@@ -29,7 +29,6 @@ func GetPostgresConnection() *pgx.Conn {
 		fmt.Fprintf(os.Stderr, "unable to connect to database: %v\n", err)
 		panic(err)
 	}
-	defer conn.Close(context.Background())
 
 	return conn
 }

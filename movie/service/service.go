@@ -15,7 +15,7 @@ type Filter struct {
 }
 
 type Service interface {
-	FindOne(id string) (*domain.Movie, error)
+	FindOne(seriesTitle string) (*domain.Movie, error)
 	FindAll() ([]*domain.Movie, error)
 }
 
@@ -29,9 +29,8 @@ func NewMovieService(repository *repository.MovieRepository) *MovieService {
 	}
 }
 
-func (s *MovieService) FindOne(id string) (*domain.Movie, error) {
-	// TODO
-	return nil, nil
+func (s *MovieService) FindOne(seriesTitle string) (*domain.Movie, error) {
+	return s.MovieRepository.FindOne(seriesTitle)
 }
 
 func (s *MovieService) FindAll() ([]*domain.Movie, error) {
