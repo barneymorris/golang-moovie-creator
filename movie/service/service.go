@@ -17,7 +17,7 @@ type Filter struct {
 
 type Service interface {
 	FindOne(seriesTitle string) (*domain.Movie, error)
-	FindAll() ([]*domain.Movie, error)
+	FindAll() (*[]domain.Movie, error)
 }
 
 type MovieService struct {
@@ -42,7 +42,10 @@ func (s *MovieService) FindOne(seriesTitle string) (*domain.Movie, error) {
 	return s.MovieRepository.FindOne(seriesTitle)
 }
 
-func (s *MovieService) FindAll() ([]*domain.Movie, error) {
-	// TODO
-	return nil, nil
+func (s *MovieService) FindAll(limit int, page int) (*[]domain.Movie, error) {
+	logrus.WithFields(logrus.Fields{
+		"method": "movie service :: FindAll",
+	}).Info("service hit")
+
+	return s.MovieRepository.FindAll(limit, page)
 }

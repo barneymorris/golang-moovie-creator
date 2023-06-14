@@ -48,6 +48,7 @@ func main() {
 	api := app.Group("/api")
 
 	api.Get("/movies/:id", movieController.GetMovieById)
+	api.Get("/movies", movieController.GetAllMovies)
 
 	log.Fatal(app.Listen(":9000"))
 }
