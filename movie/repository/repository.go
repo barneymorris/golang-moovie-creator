@@ -5,6 +5,7 @@ import (
 
 	"github.com/betelgeusexru/golang-moovie-creator/movie/db"
 	"github.com/betelgeusexru/golang-moovie-creator/movie/domain"
+	"github.com/sirupsen/logrus"
 )
 
 type Repository interface {
@@ -44,9 +45,26 @@ func (r *MovieRepository) FindOne(seriesTitle string) (*domain.Movie, error) {
 			&movie.Start3, 
 			&movie.Start4, 
 			&movie.NoOfVotes, 
-			&movie.Gross)
+			&movie.Gross);
+	
+	var loggingPrams map[string]any = make(map[string]any)
+	loggingPrams["seriesTitle"] = seriesTitle
+
+	logrus.WithFields(logrus.Fields{
+		"sql": sql,
+		"method": "movie repository :: FindOne",
+		"params": loggingPrams,
+	}).Info("repository fetch")
+		
 
 	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"sql": sql,
+			"method": "movie repository :: FindOne",
+			"params": loggingPrams,
+			"err": err.Error(),
+		}).Warn("repository fetch error")
+
 		return nil, err
 	}
 

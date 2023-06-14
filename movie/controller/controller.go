@@ -7,6 +7,7 @@ import (
 	"github.com/betelgeusexru/golang-moovie-creator/movie/repository"
 	"github.com/betelgeusexru/golang-moovie-creator/movie/service"
 	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type Controller interface {
@@ -26,6 +27,8 @@ func NewMovieController(svc *service.MovieService, repo *repository.MovieReposit
 }
 
 func (h *MovieController) GetMovieById(c *fiber.Ctx) error {
+	logrus.Info("hit movie controller :: GetMovieByiD")
+
 	id := c.Params("id")
 
 	if id == "" {
@@ -35,6 +38,14 @@ func (h *MovieController) GetMovieById(c *fiber.Ctx) error {
 	movie, err := h.MovieService.FindOne(id)
 
 	if err != nil {
+		params := make(map[string]string)
+		params["id"] = id
+
+		logrus.WithFields(logrus.Fields{
+			"err": err.Error(),
+			"params": params,
+		}).Warn("movie controller error :: GetMovieByiD")
+
 		return fiber.NewError(http.StatusBadRequest, err.Error())
 	}
 
